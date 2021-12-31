@@ -16,7 +16,7 @@ module.exports = {
     output : {
         path: OUTPUT_DIR,
         filename: 'main.js',
-        publicPath: '/'
+        publicPath: '/QRCodeGenerator'
     },
     module: {
         rules: [
@@ -56,7 +56,7 @@ module.exports = {
         host: 'localhost',
         port: port,
         historyApiFallback: {
-            index: '/'
+            index: '/QRCodeGenerator'
         },
         // disableHostCheck: true,
     }

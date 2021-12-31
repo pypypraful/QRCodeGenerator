@@ -11,8 +11,8 @@ import Utility = TopNavigationProps.Utility;
 const Navigation = () => {
     return(
         <SideNavigation
-            items={[{ type: "link", text: "Generate QR Code", href: "/" }]}
-            header={{ text: "QR Code Generator", href: '/' }}
+            items={[{ type: "link", text: "Generate QR Code", href: "/QRCodeGenerator" }]}
+            header={{ text: "QR Code Generator", href: '/QRCodeGenerator' }}
         />
     )
 }
@@ -21,13 +21,13 @@ const Content = () => {
   return(
       <Switch>
         <Route exact path={`/`} component={GenerateQRCode} />
-          <Route exact path={`/contact`} component={ContactUs} />
+        <Route exact path={`/contact`} component={ContactUs} />
       </Switch>
   )
 }
 
-const serviceIdentity = { href: '/', title: "QR Code Generator" }
-const utilities : Utility = { type:"button", "text":"CONTACT US", "href":"/contact" }
+const serviceIdentity = { href: '/QRCodeGenerator', title: "QR Code Generator" }
+const utilities : Utility = { type:"button", "text":"CONTACT US", "href":"/QRCodeGenerator/contact" }
 
 const App = () => {
     const [navigationOpen, setNavigationOpen] = useState(false)
@@ -41,7 +41,7 @@ const App = () => {
                   utilities={[utilities]}
               />
           </div>
-          <BrowserRouter>
+          <BrowserRouter basename={'/QRCodeGenerator'}>
               <AppLayout
                   headerSelector="#h"
                   footerSelector="#b"
@@ -57,7 +57,7 @@ const App = () => {
           </BrowserRouter>
           <div id="b" style={{ position: 'sticky', bottom: 0, zIndex: 1002 }}>
               <TopNavigation
-                  identity={{ href: '/', title: "This application is for development purpose only, not commercial." }}
+                  identity={{ href: '/QRCodeGenerator', title: "This application is for development purpose only, not commercial." }}
                   i18nStrings={{ overflowMenuTriggerText: "More" }}
               />
           </div>
