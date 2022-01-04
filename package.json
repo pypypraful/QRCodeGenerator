@@ -5,6 +5,7 @@
   "dependencies": {
     "@awsui/components-react": "^3.0.384",
     "@awsui/global-styles": "^1.0.10",
+    "aws-amplify": "^4.3.11",
     "css-loader": "^6.5.1",
     "gh-pages": "^3.2.3",
     "html-webpack-plugin": "^5.5.0",
