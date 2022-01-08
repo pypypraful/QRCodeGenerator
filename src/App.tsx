@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from "react"
-import {Switch, BrowserRouter, Route} from 'react-router-dom'
+import {Switch, Route, useHistory, Redirect} from 'react-router-dom'
 import AppLayout from "@awsui/components-react/app-layout";
 import GenerateQRCode from "./components/generateQRCode";
 import ContactUs from "./components/contactUs/contactUs"
 import SignUp from "./components/login/signup"
 import Login from "./components/login/login"
 import Inventory from "./components/inventory/inventory"
+import UserProfile from "./components/login/profile"
 import SideNavigation from "@awsui/components-react/side-navigation";
 import "@awsui/global-styles/index.css"
 import {Auth} from "aws-amplify"
@@ -24,29 +25,33 @@ const Navigation = () => {
     )
 }
 
-const Content = () => {
+const Content = ({isAuthenticated}) => {
   return(
       <Switch>
         <Route exact path={`/`} component={GenerateQRCode} />
         <Route exact path={`/contact`} component={ContactUs} />
         <Route exact path={`/signup`} component={SignUp} />
         <Route exact path={`/login`} component={Login} />
-        <Route exact path={`/user/inventory`} component={Inventory} />
+          {isAuthenticated ? <Route exact path={`/user/inventory`} component={Inventory} /> : <Redirect to={'/login'}/> }
+          {isAuthenticated ? <Route exact path={`/user/profile`} component={UserProfile} /> : <Redirect to={'/login'}/> }
       </Switch>
   )
 }
 
 const serviceIdentity = { href: '/QRCodeGenerator', title: "QR Code Generator" }
-const getUtilities = (isAuthenticated) => {
-    const utilities : [Utility] = [{ type:"button", text:"CONTACT US", href:"/QRCodeGenerator/contact" }]
-    if (isAuthenticated) {
-        utilities.push({ type:"button", text:"INVENTORY", href:"/QRCodeGenerator/user/inventory" })
-    }
+const getUtilities = () => {
+    const utilities : Array<Utility> = [
+        { type:"button", text:"INVENTORY", href:"/QRCodeGenerator/user/inventory" },
+        { type:"button", text:"CONTACT US", href:"/QRCodeGenerator/contact" }]
     return utilities
 }
-const login = (isAuthenticated, user, handleLogOut) : Utility => {
+const login = (isAuthenticated, user, handleLogOut, history) : Utility => {
     let items = []
     if (isAuthenticated) {
+        items.push({
+            id: "profile",
+            text: "Profile"
+        })
         items.push({
             id: "logout",
             text: "Log out"
@@ -69,15 +74,21 @@ const login = (isAuthenticated, user, handleLogOut) : Utility => {
     return {
         type:"menu-dropdown",
         iconName:"user-profile",
-        description: user || null,
+        description: isAuthenticated ? user : null,
         items: items,
-        onItemClick: () => handleLogOut()
+        onItemClick: ({detail}) => {
+            if (detail.id === "logout")
+                handleLogOut()
+            else if (detail.id === "profile")
+                history.push('/user/profile')
+        }
     }
 }
 
 const App = () => {
 
     const dispatch = useDispatch()
+    const history = useHistory()
     const userCredentials = useSelector(getUserCredentials)
     const [navigationOpen, setNavigationOpen] = useState(false)
     const [isAuthenticated, setLoggedIn] = React.useState(true);
@@ -115,23 +126,21 @@ const App = () => {
               <TopNavigation
                   identity={serviceIdentity}
                   i18nStrings={{ overflowMenuTriggerText: "More" }}
-                  utilities={[...getUtilities(isAuthenticated), login(isAuthenticated, user['username'], handleLogOut)]}
+                  utilities={[...getUtilities(), login(isAuthenticated, user['username'], handleLogOut, history)]}
               />
           </div>
-          <BrowserRouter basename={'/QRCodeGenerator'}>
-              <AppLayout
-                  headerSelector="#h"
-                  footerSelector="#b"
-                  navigationOpen = {navigationOpen}
-                  onNavigationChange = {() => setNavigationOpen(!navigationOpen)}
-                  navigationWidth = {200}
-                  content ={<Content/>}
-                  navigationHide={false}
-                  navigation={<Navigation />}
-                  toolsHide={true}
-                  stickyNotifications={true}
-              />
-          </BrowserRouter>
+          <AppLayout
+              headerSelector="#h"
+              footerSelector="#b"
+              navigationOpen = {navigationOpen}
+              onNavigationChange = {() => setNavigationOpen(!navigationOpen)}
+              navigationWidth = {200}
+              content ={<Content isAuthenticated={isAuthenticated}/>}
+              navigationHide={false}
+              navigation={<Navigation />}
+              toolsHide={true}
+              stickyNotifications={true}
+          />
           <div id="b" style={{ position: 'sticky', bottom: 0, zIndex: 1002 }}>
               <TopNavigation
                   identity={{ href: '/QRCodeGenerator', title: "This application is for development purpose only, not commercial." }}

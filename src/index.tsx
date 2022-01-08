@@ -6,6 +6,7 @@ import App from './App';
 import API from "@aws-amplify/api";
 import Auth from "@aws-amplify/auth";
 import {COGNITO} from "./configs/aws";
+import {BrowserRouter} from "react-router-dom";
 
 Auth.configure({
     aws_cognito_region: COGNITO.REGION,
@@ -32,7 +33,9 @@ API.configure({
 const store = configureStore()
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <BrowserRouter basename={'/QRCodeGenerator'}>
+            <App />
+        </BrowserRouter>
     </Provider>,
   document.getElementById('root')
 );
