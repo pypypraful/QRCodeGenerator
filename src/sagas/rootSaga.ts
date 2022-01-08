@@ -1,5 +1,6 @@
 import { all, call, fork } from 'redux-saga/effects';
 import {UserLoginSaga} from "./user/credentials";
+import {UserInventorySaga} from "./inventory/userInventorySaga";
 
 
 export function* rootSaga() {
@@ -7,7 +8,8 @@ export function* rootSaga() {
 }
 function* setListeners() {
     const sagas = [
-        call(UserLoginSaga)
+        call(UserLoginSaga),
+        call(UserInventorySaga)
     ]
 
     yield all(sagas)

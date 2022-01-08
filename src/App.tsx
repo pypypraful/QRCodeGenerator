@@ -5,22 +5,15 @@ import GenerateQRCode from "./components/generateQRCode";
 import ContactUs from "./components/contactUs/contactUs"
 import SignUp from "./components/login/signup"
 import Login from "./components/login/login"
+import Inventory from "./components/inventory/inventory"
 import SideNavigation from "@awsui/components-react/side-navigation";
 import "@awsui/global-styles/index.css"
-import { COGNITO } from "./configs/aws";
-import Amplify from "aws-amplify";
 import {Auth} from "aws-amplify"
 import TopNavigation, {TopNavigationProps} from "@awsui/components-react/top-navigation";
 import Utility = TopNavigationProps.Utility;
 import {useDispatch, useSelector} from "react-redux";
 import {getUserCredentials} from "./store/selectors/user/credentialSelectors";
 import {CredentialActionEnums} from "./store/actions/user/credentialAction";
-
-Amplify.configure({
-    aws_cognito_region: COGNITO.REGION,
-    aws_user_pools_id: COGNITO.USER_POOL_ID,
-    aws_user_pools_web_client_id: COGNITO.APP_CLIENT_ID,
-});
 
 const Navigation = () => {
     return(
@@ -38,12 +31,19 @@ const Content = () => {
         <Route exact path={`/contact`} component={ContactUs} />
         <Route exact path={`/signup`} component={SignUp} />
         <Route exact path={`/login`} component={Login} />
+        <Route exact path={`/user/inventory`} component={Inventory} />
       </Switch>
   )
 }
 
 const serviceIdentity = { href: '/QRCodeGenerator', title: "QR Code Generator" }
-const utilities : Utility = { type:"button", text:"CONTACT US", href:"/QRCodeGenerator/contact" }
+const getUtilities = (isAuthenticated) => {
+    const utilities : [Utility] = [{ type:"button", text:"CONTACT US", href:"/QRCodeGenerator/contact" }]
+    if (isAuthenticated) {
+        utilities.push({ type:"button", text:"INVENTORY", href:"/QRCodeGenerator/user/inventory" })
+    }
+    return utilities
+}
 const login = (isAuthenticated, user, handleLogOut) : Utility => {
     let items = []
     if (isAuthenticated) {
@@ -115,7 +115,7 @@ const App = () => {
               <TopNavigation
                   identity={serviceIdentity}
                   i18nStrings={{ overflowMenuTriggerText: "More" }}
-                  utilities={[utilities, login(isAuthenticated, userCredentials.email, handleLogOut)]}
+                  utilities={[...getUtilities(isAuthenticated), login(isAuthenticated, user['username'], handleLogOut)]}
               />
           </div>
           <BrowserRouter basename={'/QRCodeGenerator'}>

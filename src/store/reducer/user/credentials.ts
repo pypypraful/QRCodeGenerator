@@ -12,14 +12,14 @@ export const setUserCredentials = (
 ): UserCredentials => {
     switch (action.type) {
         case CredentialActionEnums.User_Credentials_Pending:
-            return {...action.payload, loading: true, error: null}
+            return {...userCredentials, loading: true, error: null}
         case CredentialActionEnums.User_Credentials_Success:
-            return {...action.payload, loading: false, email: action.payload.email, phoneNumber: action.payload.phoneNumber, error: null}
+            return {...userCredentials, loading: false, email: action.payload.email, phoneNumber: action.payload.phoneNumber, error: null}
         case CredentialActionEnums.User_Credentials_Error:
-            return {...action.payload, loading: false, error: action.payload.error}
+            return {...userCredentials, loading: false, error: action.payload.error}
         case CredentialActionEnums.User_Credentials_Logout:
-            return {...action.payload, loading: true, error: null}
+            return {...userCredentials, loading: true, error: null}
         default:
-            return action
+            return {...userCredentials}
     }
 }
