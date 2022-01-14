@@ -10,14 +10,14 @@ export function* UserProfileSaga() {
 export function* getUserProfile(action) {
     const userInfo = yield Auth.currentAuthenticatedUser()
     try{
-        const userProfile = yield  API.get("Inventory", `/users`,
+        const users = yield  API.get("Inventory", `/users`,
             {
                 headers: {Authorization: `Bearer ${(yield Auth.currentSession()).getIdToken().getJwtToken()}`},
-                queryStringParameters: {username: userInfo.username}
+                queryStringParameters: {username: userInfo.username, ...action.payload}
             })
         yield put({
             type: UserProfileActionEnum.User_Profile_Success,
-            payload: userProfile
+            payload: users.userProfiles[0]
         })
     } catch (error) {
         yield put({
@@ -32,7 +32,7 @@ export function* updateUserProfile(action) {
         const userProfile = yield  API.post("Inventory", `/users`,
             {
                 headers: {Authorization: `Bearer ${(yield Auth.currentSession()).getIdToken().getJwtToken()}`},
-                body: action.payload
+                body: {userProfile : action.payload}
             })
         yield put({
             type: UserProfileActionEnum.User_Profile_Success,

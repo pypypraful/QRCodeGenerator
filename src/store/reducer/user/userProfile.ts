@@ -13,11 +13,21 @@ export const userProfileReducer = (
 ): UserProfile => {
     switch (action.type) {
         case UserProfileActionEnum.User_Profile_Success:
-            return {...userProfile, loading: false, error: null, username: action.payload.username, customerProfile: action.payload.customerProfile, businessProfile: action.payload.businessProfile}
+            return {...action.payload, loading: false, error: null}
         case UserProfileActionEnum.User_Profile_Pending:
             return {...userProfile, loading: true, error: null}
         case UserProfileActionEnum.User_Profile_Error:
-            return {...userProfile, loading: false, error: action.payload}
+            return {
+                addressLine: "",
+                city: "",
+                clientAdditionalDetail: undefined,
+                name: "",
+                phoneNumber: "",
+                pincode: 0,
+                profileType: "",
+                state: "",
+                username: "",
+                loading: false, error: action.payload}
         case UserProfileActionEnum.User_Profile_Update:
             return {...userProfile, loading: true, error: null}
         default:

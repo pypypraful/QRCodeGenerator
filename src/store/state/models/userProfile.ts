@@ -1,28 +1,18 @@
 export interface UserProfile {
     username: string
-    customerProfile: CustomerProfile
-    businessProfile: BusinessProfile
+    profileType: string
+    pincode: number
+    clientAdditionalDetail: ClientAdditionalDetail
+    name: string
+    phoneNumber: string
+    addressLine: string
+    city: string
+    state: string
     loading: boolean
     error: string
 }
 
-export interface CustomerProfile {
-    customerName: string
-    customerPhoneNumber: string
-    homeAddress: Address
-}
-
-export interface BusinessProfile {
-    businessName: string
-    businessPhoneNumber: string
-    businessAddress: Address
+export interface ClientAdditionalDetail {
     gstIN: string
     panNumber: string
-}
-
-export interface Address {
-    addressLine: string
-    city: string
-    state: string
-    pincode: number
 }
