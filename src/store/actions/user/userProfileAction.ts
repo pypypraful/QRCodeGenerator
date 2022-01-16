@@ -3,6 +3,11 @@ export interface UserProfilePending {
     payload: any
 }
 
+export interface SellerProfilePending {
+    type: UserProfileActionEnum.Seller_Profile_Pending,
+    payload: any
+}
+
 export interface UserProfileSuccess {
     type: UserProfileActionEnum.User_Profile_Success,
     payload: any
@@ -19,6 +24,7 @@ export interface UserProfileUpdate {
 }
 
 export enum UserProfileActionEnum {
+    Seller_Profile_Pending = 'Seller_Profile_Pending',
     User_Profile_Pending = 'User_Profile_Pending',
     User_Profile_Success = 'User_Profile_Success',
     User_Profile_Error = 'User_Profile_Error',

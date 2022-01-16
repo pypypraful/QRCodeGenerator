@@ -9,6 +9,6 @@ export const createRootReducer = (history: History<Record<string, unknown>>) => 
     return combineReducers<State>({
         userCredentials: setUserCredentials,
         userInventory: userInventoryReducer,
-        userProfile: userProfileReducer
+        userProfiles: userProfileReducer
     });
 };

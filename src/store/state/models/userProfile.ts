@@ -1,3 +1,8 @@
+export interface UserProfileList {
+    userProfiles : Array<UserProfile>
+    loading: boolean
+    error: string
+}
 export interface UserProfile {
     username: string
     profileType: string
@@ -8,8 +13,6 @@ export interface UserProfile {
     addressLine: string
     city: string
     state: string
-    loading: boolean
-    error: string
 }
 
 export interface ClientAdditionalDetail {

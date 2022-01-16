@@ -1,9 +1,9 @@
 import {UserCredentials} from "./models/login";
 import {UserInventory} from "./models/inventory";
-import {UserProfile} from "./models/userProfile";
+import {UserProfileList} from "./models/userProfile";
 
 export interface State {
     userCredentials: UserCredentials,
     userInventory: UserInventory,
-    userProfile: UserProfile
+    userProfiles: UserProfileList
 }

@@ -1,26 +1,30 @@
 import React, {useState, useEffect} from "react"
 import {Switch, Route, useHistory, Redirect} from 'react-router-dom'
+import {useDispatch, useSelector} from "react-redux";
+import Auth from "@aws-amplify/auth"
 import AppLayout from "@awsui/components-react/app-layout";
+import Input from "@awsui/components-react/input";
+import Button from "@awsui/components-react/button";
+import Grid from "@awsui/components-react/grid";
+import SideNavigation from "@awsui/components-react/side-navigation";
+import TopNavigation, {TopNavigationProps} from "@awsui/components-react/top-navigation";
 import GenerateQRCode from "./components/generateQRCode";
 import ContactUs from "./components/contactUs/contactUs"
 import SignUp from "./components/login/signup"
 import Login from "./components/login/login"
+import Home from "./components/home/home"
 import Inventory from "./components/inventory/inventory"
 import UserProfile from "./components/login/profile"
-import SideNavigation from "@awsui/components-react/side-navigation";
-import "@awsui/global-styles/index.css"
-import {Auth} from "aws-amplify"
-import TopNavigation, {TopNavigationProps} from "@awsui/components-react/top-navigation";
-import Utility = TopNavigationProps.Utility;
-import {useDispatch, useSelector} from "react-redux";
 import {getUserCredentials} from "./store/selectors/user/credentialSelectors";
 import {CredentialActionEnums} from "./store/actions/user/credentialAction";
+import "@awsui/global-styles/index.css"
+import Utility = TopNavigationProps.Utility;
 
 const Navigation = () => {
     return(
         <SideNavigation
             items={[{ type: "link", text: "Generate QR Code", href: "/QRCodeGenerator" }]}
-            header={{ text: "QR Code Generator", href: '/QRCodeGenerator' }}
+            header={{ text: "Gali Ki Dukaan", href: '/QRCodeGenerator' }}
         />
     )
 }
@@ -28,17 +32,18 @@ const Navigation = () => {
 const Content = ({isAuthenticated}) => {
   return(
       <Switch>
-        <Route exact path={`/`} component={GenerateQRCode} />
-        <Route exact path={`/contact`} component={ContactUs} />
-        <Route exact path={`/signup`} component={SignUp} />
-        <Route exact path={`/login`} component={Login} />
+          <Route exact path={`/`} component={Home} />
+          <Route exact path={`/QRCodeGenerator`} component={GenerateQRCode} />
+          <Route exact path={`/contact`} component={ContactUs} />
+          <Route exact path={`/signup`} component={SignUp} />
+          <Route exact path={`/login`} component={Login} />
           {isAuthenticated ? <Route exact path={`/user/inventory`} component={Inventory} /> : <Redirect to={'/login'}/> }
           {isAuthenticated ? <Route exact path={`/user/profile`} component={UserProfile} /> : <Redirect to={'/login'}/> }
       </Switch>
   )
 }
 
-const serviceIdentity = { href: '/QRCodeGenerator', title: "QR Code Generator" }
+const serviceIdentity = { href: '/QRCodeGenerator', title: "Gali Ki Dukaan" }
 const getUtilities = () => {
     const utilities : Array<Utility> = [
         { type:"button", text:"INVENTORY", href:"/QRCodeGenerator/user/inventory" },
@@ -93,6 +98,7 @@ const App = () => {
     const [navigationOpen, setNavigationOpen] = useState(false)
     const [isAuthenticated, setLoggedIn] = React.useState(true);
     const [user, setUser] = useState({})
+    const [pincode, setPincode] = useState("")
 
     useEffect(() => {
         (async () => {
@@ -127,6 +133,21 @@ const App = () => {
                   identity={serviceIdentity}
                   i18nStrings={{ overflowMenuTriggerText: "More" }}
                   utilities={[...getUtilities(), login(isAuthenticated, user['username'], handleLogOut, history)]}
+                  search={<Grid gridDefinition={[{ colspan: 8 }, { colspan: 4 }]}>
+                              <Input
+                                  placeholder="Enter Pincode"
+                                  ariaLabel="Search"
+                                  value={pincode || userCredentials.pincode?.toString()}
+                                  inputMode="numeric"
+                                  type={'number'}
+                                  onChange={({detail}) => setPincode(detail.value)}
+                              />
+                              <Button iconName="search" variant="icon" onClick={() => dispatch({
+                                      type: CredentialActionEnums.Update_User_Pincode,
+                                      payload: pincode
+                                  })}/>
+                          </Grid>
+                  }
               />
           </div>
           <AppLayout

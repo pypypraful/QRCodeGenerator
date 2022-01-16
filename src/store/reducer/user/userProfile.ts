@@ -1,5 +1,6 @@
-import {UserProfile} from "../../state/models/userProfile";
+import {UserProfileList} from "../../state/models/userProfile";
 import {
+    SellerProfilePending,
     UserProfileActionEnum,
     UserProfileError,
     UserProfilePending,
@@ -8,29 +9,21 @@ import {
 } from "../../actions/user/userProfileAction";
 
 export const userProfileReducer = (
-    userProfile: UserProfile,
-    action: UserProfileSuccess | UserProfilePending | UserProfileError | UserProfileUpdate
-): UserProfile => {
+    userProfiles: UserProfileList,
+    action: UserProfileSuccess | UserProfilePending | UserProfileError | UserProfileUpdate | SellerProfilePending
+): UserProfileList => {
     switch (action.type) {
         case UserProfileActionEnum.User_Profile_Success:
-            return {...action.payload, loading: false, error: null}
+            return {userProfiles: action.payload.userProfiles, loading: false, error: null}
         case UserProfileActionEnum.User_Profile_Pending:
-            return {...userProfile, loading: true, error: null}
+            return {...userProfiles, loading: true, error: null}
+        case UserProfileActionEnum.Seller_Profile_Pending:
+            return {...userProfiles, loading: true, error: null}
         case UserProfileActionEnum.User_Profile_Error:
-            return {
-                addressLine: "",
-                city: "",
-                clientAdditionalDetail: undefined,
-                name: "",
-                phoneNumber: "",
-                pincode: 0,
-                profileType: "",
-                state: "",
-                username: "",
-                loading: false, error: action.payload}
+            return {userProfiles: undefined, loading: false, error: action.payload}
         case UserProfileActionEnum.User_Profile_Update:
-            return {...userProfile, loading: true, error: null}
+            return {...userProfiles, loading: true, error: null}
         default:
-            return {...userProfile}
+            return {...userProfiles}
     }
 }
