@@ -13,12 +13,14 @@ import ContactUs from "./components/contactUs/contactUs"
 import SignUp from "./components/login/signup"
 import Login from "./components/login/login"
 import Home from "./components/home/home"
+import SellerProducts from "./components/home/sellerHomePage"
 import Inventory from "./components/inventory/inventory"
 import UserProfile from "./components/login/profile"
 import {getUserCredentials} from "./store/selectors/user/credentialSelectors";
 import {CredentialActionEnums} from "./store/actions/user/credentialAction";
 import "@awsui/global-styles/index.css"
 import Utility = TopNavigationProps.Utility;
+import CART_SVG from "./svg/cart-svg";
 
 const Navigation = () => {
     return(
@@ -33,6 +35,7 @@ const Content = ({isAuthenticated}) => {
   return(
       <Switch>
           <Route exact path={`/`} component={Home} />
+          <Route exact path={`/products`} component={SellerProducts} />
           <Route exact path={`/QRCodeGenerator`} component={GenerateQRCode} />
           <Route exact path={`/contact`} component={ContactUs} />
           <Route exact path={`/signup`} component={SignUp} />
@@ -46,33 +49,19 @@ const Content = ({isAuthenticated}) => {
 const serviceIdentity = { href: '/QRCodeGenerator', title: "Gali Ki Dukaan" }
 const getUtilities = () => {
     const utilities : Array<Utility> = [
-        { type:"button", text:"INVENTORY", href:"/QRCodeGenerator/user/inventory" },
-        { type:"button", text:"CONTACT US", href:"/QRCodeGenerator/contact" }]
+        { type:"button", text:"Shops", href:"/QRCodeGenerator" },
+        { type:"button", iconSvg: CART_SVG, title:"Notifications"}
+    ]
     return utilities
 }
 const login = (isAuthenticated, user, handleLogOut, history) : Utility => {
-    let items = []
+    let items
     if (isAuthenticated) {
-        items.push({
-            id: "profile",
-            text: "Profile"
-        })
-        items.push({
-            id: "logout",
-            text: "Log out"
-        })
+        items = [{id: "profile", text: "Profile"}, {id: "inventory", text: "Seller Inventory"}, {id: "logout", text: "Log out"}]
     } else {
         items = [
-            {
-                id: "login",
-                text: "Login",
-                href: "/QRCodeGenerator/login"
-            },
-            {
-                id: "signup",
-                text: "Sign Up",
-                href: "/QRCodeGenerator/signup"
-            }
+            { id: "login", text: "Login", href: "/QRCodeGenerator/login" },
+            { id: "signup", text: "Sign Up", href: "/QRCodeGenerator/signup"}
         ]
     }
 
@@ -86,6 +75,8 @@ const login = (isAuthenticated, user, handleLogOut, history) : Utility => {
                 handleLogOut()
             else if (detail.id === "profile")
                 history.push('/user/profile')
+            else if (detail.id === "inventory")
+                history.push('/user/inventory')
         }
     }
 }
@@ -164,8 +155,9 @@ const App = () => {
           />
           <div id="b" style={{ position: 'sticky', bottom: 0, zIndex: 1002 }}>
               <TopNavigation
-                  identity={{ href: '/QRCodeGenerator', title: "This application is for development purpose only, not commercial." }}
+                  identity={{href: ""}}
                   i18nStrings={{ overflowMenuTriggerText: "More" }}
+                  search={<Button onClick={() => history.push('/contact')}>CONTACT US</Button>}
               />
           </div>
       </>

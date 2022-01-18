@@ -10,6 +10,6 @@ export const initialUserCredentials : UserCredentials = {
     email: "",
     phoneNumber: "",
     pincode: 282007,
-    loading: true,
+    loading: false,
     error: null
 }
