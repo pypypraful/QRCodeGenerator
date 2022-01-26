@@ -16,6 +16,7 @@ import Home from "./components/home/home"
 import SellerProducts from "./components/home/sellerHomePage"
 import Inventory from "./components/inventory/inventory"
 import UserProfile from "./components/login/profile"
+import CustomerCart from "./components/customerCart/customerCart"
 import {getUserCredentials} from "./store/selectors/user/credentialSelectors";
 import {CredentialActionEnums} from "./store/actions/user/credentialAction";
 import "@awsui/global-styles/index.css"
@@ -40,6 +41,7 @@ const Content = ({isAuthenticated}) => {
           <Route exact path={`/contact`} component={ContactUs} />
           <Route exact path={`/signup`} component={SignUp} />
           <Route exact path={`/login`} component={Login} />
+          {isAuthenticated ? <Route exact path={`/cart`} component={CustomerCart} /> : <Redirect to={'/login'}/> }
           {isAuthenticated ? <Route exact path={`/user/inventory`} component={Inventory} /> : <Redirect to={'/login'}/> }
           {isAuthenticated ? <Route exact path={`/user/profile`} component={UserProfile} /> : <Redirect to={'/login'}/> }
       </Switch>
@@ -50,7 +52,7 @@ const serviceIdentity = { href: '/QRCodeGenerator', title: "Gali Ki Dukaan" }
 const getUtilities = () => {
     const utilities : Array<Utility> = [
         { type:"button", text:"Shops", href:"/QRCodeGenerator" },
-        { type:"button", iconSvg: CART_SVG, title:"Notifications"}
+        { type:"button", iconSvg: CART_SVG, title:"CustomerCart", href:"/QRCodeGenerator/cart"}
     ]
     return utilities
 }

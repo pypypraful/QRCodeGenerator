@@ -37,6 +37,9 @@ export function* getSellerProfile(action) {
         timeout: 150000,
         baseURL: 'https://{}.execute-api.ap-south-1.amazonaws.com/Prod',
     }
+    axios.defaults.headers.common = {
+        "X-API-Key": "",
+    };
     try{
         // @ts-ignore
         const usersResponse = yield axios(options)
