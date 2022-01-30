@@ -186,7 +186,7 @@ export default () => {
 
     return(
         <>
-            <Grid gridDefinition={[{ colspan: 4 }, { colspan: 4 }, { colspan: 4 }]}>
+            <Grid gridDefinition={[{ colspan: { default: 2, s: 4 } }, { colspan: { default: 8, s: 4 } }, { colspan: { default: 2, s: 4 } }]}>
                 <div/>
                 <div>
                     <Flashbar items={flashbarItem}/>
