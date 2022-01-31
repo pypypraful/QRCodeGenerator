@@ -8,7 +8,7 @@ export function* sellerProductsSaga() {
 
 function* getSellerProducts(action) {
     const options = {
-        url: "/inventory",
+        url: "/seller-inventory",
         method: "GET",
         params: {...action.payload},
         timeout: 150000,

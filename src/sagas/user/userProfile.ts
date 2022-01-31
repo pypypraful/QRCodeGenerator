@@ -42,10 +42,10 @@ export function* getSellerProfile(action) {
     };
     try{
         // @ts-ignore
-        const usersResponse = yield axios(options)
+        const sellerProfiles = yield axios(options)
         yield put({
-            type: UserProfileActionEnum.User_Profile_Success,
-            payload: usersResponse.data
+            type: UserProfileActionEnum.Seller_Profile_Success,
+            payload: { sellerProfiles: sellerProfiles.data }
         })
     } catch (error) {
         yield put({

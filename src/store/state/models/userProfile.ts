@@ -1,5 +1,5 @@
-export interface UserProfileList {
-    userProfiles : Array<UserProfile>
+export interface SellerProfileList {
+    sellerProfiles : Array<UserProfile>
     loading: boolean
     error: string
 }
@@ -13,9 +13,36 @@ export interface UserProfile {
     addressLine: string
     city: string
     state: string
+    loading: boolean
+    error: string
 }
 
 export interface ClientAdditionalDetail {
     gstIN: string
     panNumber: string
+}
+
+export const initialClientAdditionalDetail : ClientAdditionalDetail = {
+    gstIN: "", panNumber: ""
+}
+
+export const initialUserProfile : UserProfile = {
+    addressLine: "",
+    city: "",
+    clientAdditionalDetail: initialClientAdditionalDetail,
+    name: "",
+    phoneNumber: "",
+    pincode: 0,
+    profileType: "",
+    state: "",
+    username: "",
+    loading: true,
+    error: null
+
+}
+
+export const initialSellerProfileList : SellerProfileList = {
+    sellerProfiles : [initialUserProfile],
+    loading: true,
+    error: null
 }

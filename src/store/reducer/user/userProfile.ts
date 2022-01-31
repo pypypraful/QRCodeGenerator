@@ -1,6 +1,12 @@
-import {UserProfileList} from "../../state/models/userProfile";
 import {
-    SellerProfilePending,
+    initialSellerProfileList,
+    initialUserProfile,
+    SellerProfileList,
+    UserProfile
+} from "../../state/models/userProfile";
+import {
+    SellerProfileError,
+    SellerProfilePending, SellerProfileSuccess,
     UserProfileActionEnum,
     UserProfileError,
     UserProfilePending,
@@ -9,21 +15,37 @@ import {
 } from "../../actions/user/userProfileAction";
 
 export const userProfileReducer = (
-    userProfiles: UserProfileList,
+    userProfile: UserProfile = initialUserProfile,
     action: UserProfileSuccess | UserProfilePending | UserProfileError | UserProfileUpdate | SellerProfilePending
-): UserProfileList => {
+): UserProfile => {
     switch (action.type) {
         case UserProfileActionEnum.User_Profile_Success:
-            return {userProfiles: action.payload.userProfiles, loading: false, error: null}
+            return { ...action.payload.userProfile , loading: false, error: null}
         case UserProfileActionEnum.User_Profile_Pending:
-            return {...userProfiles, loading: true, error: null}
+            return {...userProfile, loading: true, error: null}
         case UserProfileActionEnum.Seller_Profile_Pending:
-            return {...userProfiles, loading: true, error: null}
+            return {...userProfile, loading: true, error: null}
         case UserProfileActionEnum.User_Profile_Error:
-            return {userProfiles: undefined, loading: false, error: action.payload}
+            return {...initialUserProfile, loading: false, error: action.payload}
         case UserProfileActionEnum.User_Profile_Update:
-            return {...userProfiles, loading: true, error: null}
+            return {...userProfile, loading: true, error: null}
         default:
-            return {...userProfiles}
+            return {...userProfile}
+    }
+}
+
+export const sellerProfileReducer = (
+    sellerProfiles: SellerProfileList = initialSellerProfileList,
+    action: SellerProfilePending | SellerProfileSuccess | SellerProfileError
+): SellerProfileList => {
+    switch (action.type) {
+        case UserProfileActionEnum.Seller_Profile_Success:
+            return { ...action.payload.sellerProfiles , loading: false, error: null}
+        case UserProfileActionEnum.Seller_Profile_Error:
+            return {...sellerProfiles, loading: true, error: null}
+        case UserProfileActionEnum.Seller_Profile_Pending:
+            return {...sellerProfiles, loading: true, error: null}
+        default:
+            return {...sellerProfiles}
     }
 }

@@ -11,12 +11,14 @@ import cloneDeep from "lodash/fp/cloneDeep"
 import {UserProfileActionEnum} from "../../store/actions/user/userProfileAction";
 import Button from "@awsui/components-react/button";
 import Spinner from "@awsui/components-react/spinner";
+import {initialUserProfile} from "../../store/state/models/userProfile";
 
 export default () => {
 
     let dispatch = useDispatch()
     let userProfile = useSelector(getUserProfile)
     const [editMode, setEditMode] = useState(false)
+    const [reload, setReload] = useState(false)
     const [tempUserDetail, setTempUserDetail] = useState(userProfile)
 
     useEffect(() => {
@@ -24,13 +26,11 @@ export default () => {
             type: UserProfileActionEnum.User_Profile_Pending,
             payload: {profileType: "BUYER"}
         })
-    }, [])
+    }, [reload])
 
     const setEditModeHandler = (previousEditState) => {
         if (previousEditState) {
-            setTempUserDetail({
-                error: "", loading: false, userProfiles: undefined
-            })
+            setTempUserDetail(initialUserProfile)
             setEditMode(false)
         } else {
             setTempUserDetail(userProfile)
@@ -63,82 +63,85 @@ export default () => {
             }
         >
             <ColumnLayout columns={2} variant="text-grid">
-                {userProfile.loading ? <Spinner size={'large'}/> :
+                { userProfile.loading ? <Spinner size={'large'}/> : null}
+                { userProfile.error ? <div><code>{userProfile.error}</code><Button variant="normal" onClick={() => setReload(!reload)}>Reload</Button></div> : null }
+                { !userProfile.loading && !userProfile.error ?
                 <>
                 <SpaceBetween size="l">
                     <div>
                         <Box variant="awsui-key-label"><code>Name</code></Box>
-                        {editMode ? <small><Input value={tempUserDetail[0].name}
+                        {editMode ? <small><Input value={tempUserDetail?.name}
                                                   onChange={({detail}) => {
                                                       let tmpUsr = cloneDeep(tempUserDetail)
                                                       tmpUsr.name = detail.value
                                                       setTempUserDetail(tmpUsr)
                                                   }}/>
-                        </small> : <small>{userProfile[0].name}</small>}
+                        </small> : <small>{userProfile?.name}</small>}
                     </div>
                     <div>
                         <Box variant="awsui-key-label"><code>Email</code></Box>
-                        <small>{userProfile[0].username}</small>
+                        <small>{userProfile?.username}</small>
                     </div>
                     <div>
                         <Box variant="awsui-key-label"><code>Phone Number</code></Box>
-                        {editMode ? <small><Input value={tempUserDetail[0].phoneNumber}
+                        {editMode ? <small><Input value={tempUserDetail?.phoneNumber}
                                                   onChange={({detail}) => {
                                                       let tmpUsr = cloneDeep(tempUserDetail)
                                                       tmpUsr.phoneNumber = detail.value
                                                       setTempUserDetail(tmpUsr)
                                                   }}/>
-                        </small> : <small>{userProfile[0].phoneNumber}</small>}
+                        </small> : <small>{userProfile?.phoneNumber}</small>}
                     </div>
                 </SpaceBetween>
                 <SpaceBetween size={"l"}>
                     <div>
                         <Box variant="awsui-key-label"><code>Address</code></Box>
-                        {editMode ? <small><Input value={tempUserDetail[0].addressLine}
+                        {editMode ? <small><Input value={tempUserDetail?.addressLine}
                                                   onChange={({detail}) => {
                                                       let tmpUsr = cloneDeep(tempUserDetail)
                                                       tmpUsr.addressLine = detail.value
                                                       setTempUserDetail(tmpUsr)
                                                   }}/>
-                        </small> : <small>{userProfile[0].addressLine}</small>}
+                        </small> : <small>{userProfile?.addressLine}</small>}
                     </div>
                     <div>
                         <ColumnLayout columns={2} variant="text-grid">
                             <div>
                                 <Box variant="awsui-key-label"><code>City</code></Box>
-                                {editMode ? <small><Input value={tempUserDetail[0].city}
+                                {editMode ? <small><Input value={tempUserDetail?.city}
                                                           onChange={({detail}) => {
                                                               let tmpUsr = cloneDeep(tempUserDetail)
                                                               tmpUsr.city = detail.value
                                                               setTempUserDetail(tmpUsr)
                                                           }}/>
-                                </small> : <small>{userProfile[0].city}</small>}
+                                </small> : <small>{userProfile?.city}</small>}
                             </div>
                             <div>
                                 <Box variant="awsui-key-label"><code>State</code></Box>
-                                {editMode ? <small><Input value={tempUserDetail[0].state}
+                                {editMode ? <small><Input value={tempUserDetail?.state}
                                                           onChange={({detail}) => {
                                                               let tmpUsr = cloneDeep(tempUserDetail)
                                                               tmpUsr.state = detail.value
                                                               setTempUserDetail(tmpUsr)
                                                           }}/>
-                                </small> : <small>{userProfile[0].state}</small>}
+                                </small> : <small>{userProfile?.state}</small>}
                             </div>
                         </ColumnLayout>
                     </div>
                     <div>
                         <Box variant="awsui-key-label"><code>Pincode</code></Box>
-                        {editMode ? <small><Input value={tempUserDetail[0].pincode.toString()}
+                        {/* @ts-ignore */}
+                        {editMode ? <small><Input value={tempUserDetail?.pincode}
                                                   type={'number'}
                                                   onChange={({detail}) => {
                                                       let tmpUsr = cloneDeep(tempUserDetail)
                                                       tmpUsr.pincode = detail.value
                                                       setTempUserDetail(tmpUsr)
                                                   }}/>
-                        </small> : <small>{userProfile[0].pincode}</small>}
+                        </small> : <small>{userProfile?.pincode}</small>}
                     </div>
                 </SpaceBetween>
-                </>}
+                </>: null}
             </ColumnLayout>
         </Container>
     )

@@ -1,4 +1,6 @@
 import {State} from "../../state/state";
-import {UserProfileList} from "../../state/models/userProfile";
+import {SellerProfileList, UserProfile} from "../../state/models/userProfile";
 
-export const getUserProfile = ( state: State): UserProfileList => state.userProfiles
+export const getUserProfile = ( state: State): UserProfile => state.userProfile
+
+export const getSellerProfiles = (state: State) : SellerProfileList => state.sellerProfiles

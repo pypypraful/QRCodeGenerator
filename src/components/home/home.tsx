@@ -10,7 +10,7 @@ import Button from "@awsui/components-react/button";
 import TextContent from "@awsui/components-react/text-content";
 import Link from "@awsui/components-react/link";
 import {useDispatch, useSelector} from "react-redux";
-import {getUserProfile} from "../../store/selectors/user/userProfileSelectors";
+import {getSellerProfiles} from "../../store/selectors/user/userProfileSelectors";
 import {getUserCredentials} from "../../store/selectors/user/credentialSelectors";
 import {UserProfileActionEnum} from "../../store/actions/user/userProfileAction";
 
@@ -19,7 +19,7 @@ export default () => {
     const dispatch = useDispatch()
     const history = useHistory();
     const userCredentials = useSelector(getUserCredentials)
-    const shopProfiles = useSelector(getUserProfile)
+    const {sellerProfiles, loading, error} = useSelector(getSellerProfiles)
 
     useEffect(() => {
         dispatch({
@@ -67,9 +67,9 @@ export default () => {
             variant={"container"}
             cardDefinition={shopCardDefinition}
             cardsPerRow={[{ cards: 1 }]}
-            items={shopProfiles.userProfiles}
+            items={sellerProfiles}
             loadingText="Loading resources"
-            loading={shopProfiles.loading}
+            loading={loading}
             visibleSections={["seller"]}
             stickyHeader={true}
             empty={
@@ -86,12 +86,12 @@ export default () => {
             }
             header={
                 <Header
-                    counter={`(${shopProfiles.userProfiles?.length || 0})`}
+                    counter={`(${sellerProfiles?.length || 0})`}
                 >
                     Shops Nearby
                 </Header>
             }
-            pagination={<Pagination currentPageIndex={1} pagesCount={shopProfiles.userProfiles?.length/5} />}
+            pagination={<Pagination currentPageIndex={1} pagesCount={sellerProfiles?.length/5} />}
         />
     )
 }
